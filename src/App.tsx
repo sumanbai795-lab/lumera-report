@@ -7,7 +7,8 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<h1>Welcome to Lumera Report</h1>} />
-        <Route path="/patient/:patientId" element={<PatientReport />} />
+       <Route path="/report/:reportId" element={<PatientReport />} />
+
       </Routes>
     </BrowserRouter>
   );
