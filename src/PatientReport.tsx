@@ -14,7 +14,6 @@ import {
 
 // API URL from .env, fallback to temporary Cloudflare link
 const API_URL =
-  process.env.REACT_APP_API_URL ||
   "https://ricky-refinance-ser-satisfy.trycloudflare.com";
 
 
