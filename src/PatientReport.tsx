@@ -10,12 +10,12 @@ import {
   Chip,
   Box,
   Divider,
+  Card,
+  CardContent,
 } from "@mui/material";
 
-// API URL from .env, fallback to temporary Cloudflare link
 const API_URL =
-  "https://ricky-refinance-ser-satisfy.trycloudflare.com";
-
+  "https://sites-quotes-modify-layers.trycloudflare.com";
 
 interface ReportData {
   id: number;
@@ -67,6 +67,25 @@ export default function PatientReport() {
       </Typography>
     );
 
+  // Extract scores safely
+  const zr = report.zylaResult || {};
+  const s = zr.score_info || {};
+
+  // 11 Skin Parameters
+  const skinParameters = [
+    { label: "Acne", value: s.acne_score ?? "N/A" },
+    { label: "Pores", value: s.pores_score ?? "N/A" },
+    { label: "Wrinkles", value: s.wrinkle_score ?? "N/A" },
+    { label: "Red Spots", value: s.red_spot_score ?? "N/A" },
+    { label: "Texture / Roughness", value: s.rough_score ?? "N/A" },
+    { label: "Dryness / Water", value: s.water_score ?? "N/A" },
+    { label: "Oiliness", value: s.oily_intensity_score ?? "N/A" },
+    { label: "Sensitivity", value: s.sensitivity_score ?? "N/A" },
+    { label: "Pigmentation (Melanin)", value: s.melanin_score ?? "N/A" },
+    { label: "Dark Circles", value: s.dark_circle_score ?? "N/A" },
+    { label: "Blackheads", value: s.blackhead_score ?? "N/A" },
+  ];
+
   return (
     <Container maxWidth="md" sx={{ py: 5 }}>
       <Typography
@@ -96,41 +115,54 @@ export default function PatientReport() {
           <b>Patient ID:</b> {report.patientId}
         </Typography>
 
-        {/* Dryness */}
-        <Typography sx={{ mt: 2 }}>
-          <b>Dryness Score:</b>{" "}
-          {report.dryness !== null ? (
-            <Chip
-              label={report.dryness}
-              color={report.dryness > 50 ? "error" : "success"}
-            />
-          ) : (
-            "-"
-          )}
+        {/* ------------------------------- */}
+        {/*       ZYLA SCORES SECTION       */}
+        {/* ------------------------------- */}
+
+        <Typography sx={{ mt: 3 }} fontWeight="bold" fontSize={20}>
+          Zyla AI Skin Scores (11 Parameters)
         </Typography>
 
-        {/* Top Issue */}
-        <Typography sx={{ mt: 2 }}>
-          <b>Top Issue:</b> {report.topIssue || "—"}
-        </Typography>
+        {/* ⭐ GRID FIX – Pure CSS Grid, NO ERRORS ⭐ */}
+        <Box
+          display="grid"
+          gridTemplateColumns={{ xs: "1fr", sm: "1fr 1fr" }}
+          gap={2}
+          mt={2}
+        >
+          {skinParameters.map((p, i) => (
+            <Card
+              key={i}
+              elevation={3}
+              sx={{
+                p: 2,
+                borderRadius: 3,
+                background: "#f7f7f7",
+              }}
+            >
+              <CardContent>
+                <Typography fontWeight="bold" sx={{ mb: 1 }}>
+                  {p.label}
+                </Typography>
 
-        {/* AI Recommendation */}
-        <Typography sx={{ mt: 2 }}>
-          <b>AI Recommendation:</b>
-          <br />
-          {report.aiRecommendation || "—"}
-        </Typography>
-
-        {/* GPT Care Plan */}
-        <Typography sx={{ mt: 2 }}>
-          <b>GPT Care Plan:</b>
-          <br />
-          {report.gptCarePlan || "—"}
-        </Typography>
+                <Chip
+                  label={p.value}
+                  color={
+                    p.value === "N/A"
+                      ? "default"
+                      : Number(p.value) > 50
+                      ? "error"
+                      : "success"
+                  }
+                />
+              </CardContent>
+            </Card>
+          ))}
+        </Box>
 
         {/* Products */}
-        <Typography sx={{ mt: 2 }}>
-          <b>Recommended Products:</b>
+        <Typography sx={{ mt: 4 }} fontWeight="bold">
+          Recommended Products:
         </Typography>
 
         {report.products?.length > 0 ? (
