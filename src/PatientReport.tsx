@@ -1,3 +1,4 @@
+// src/PatientReport.tsx
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -11,7 +12,11 @@ import {
   Divider,
 } from "@mui/material";
 
-const API_URL = "https://condign-acarpelous-marlen.ngrok-free.dev";
+// API URL from .env, fallback to temporary Cloudflare link
+const API_URL =
+  process.env.REACT_APP_API_URL ||
+  "https://ricky-refinance-ser-satisfy.trycloudflare.com";
+
 
 interface ReportData {
   id: number;
@@ -31,16 +36,20 @@ export default function PatientReport() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     axios
       .get(`${API_URL}/patient-history/report/${reportId}`)
       .then((res) => {
         if (res.data.success) {
           setReport(res.data.data);
+        } else {
+          setReport(null);
         }
         setLoading(false);
       })
       .catch((err) => {
-        console.error(err);
+        console.error("API Error:", err);
+        setReport(null);
         setLoading(false);
       });
   }, [reportId]);
